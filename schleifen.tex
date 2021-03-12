@@ -1,18 +1,11 @@
 \RequirePackage{pdfmanagement-testphase}
 \DeclareDocumentMetadata{pdfstandard=A-2b}
 \documentclass[a5paper,landscape,ngerman,10pt]{article}
-\usepackage{babel,listings,geometry,relsize}
-\usepackage[
-    math-style=ISO,
-    bold-style=ISO,
-    partial=upright,
-    nabla=upright
-]{unicode-math}
-
-\setmainfont{Libertinus Serif}
-\setsansfont{Libertinus Sans}
-\setmathfont{Libertinus Math}
-
+\usepackage{babel,listings,geometry,relsize,unicode-math}
+%\setmainfont{Libertinus Serif}
+%\setmathfont{Libertinus Math}
+\setmainfont{TeX Gyre Pagella}
+\setmathfont{TeX Gyre Pagella Math}
 \lstloadlanguages{[11]C++, Modula-2, Python}
 \title{Schleifen wegoptimieren}
 \author{Timm Knape}
@@ -32,15 +25,15 @@
 \section{Aufgabenstellung}
 %
 Während meines Informatik-Studiums haben wir die
-Programmiersprache \hbox{\sc Modula-2} gelernt.
+Programmiersprache \hbox{\textsc{Modula-$2$}} gelernt.
 Mühevoll zogen sich die Wochen dahin, in denen wir die
 Grundstrukturen verdauten.
 Irgendwann wurden Schleifen eingeführt und es kam auf
 einem Übungszettel zu folgender Aufgabe:
 
 \begin{quotation}
-\it Schreibe eine Funktion, welche die 
-Summe der ersten $n$ ganzen Zahlen liefert.
+\textit{Schreibe eine Funktion, welche die 
+Summe der ersten $n$ ganzen Zahlen liefert.}
 \end{quotation}
 
 Erwartet war irgendetwas in der Form
@@ -134,7 +127,7 @@ Dieser ist jedoch viel größer.
 Bei der Schleife muss nur das Ergebnis kleiner $2^{31}$ sein,
 also
 
-\[2^{31} > {n\cdot(n + 1)\over2}\]
+\[2^{31} > \frac{n\cdot(n + 1)}2\]
 
 Durch Multiplizieren mit $2$ ergibt sich
 
@@ -220,7 +213,7 @@ int sum&\,&(int $n$) {
 \end{lstlisting}
 \end{quotation}
 
-Aber es geht {\it noch\/} besser.
+Aber es geht \textit{noch\/} besser.
 Die Fallunterscheidung macht bei aktuellen Prozessor-Pipelines
 Probleme.
 Wenn der Prozessor den falschen Weg rät, muss die
@@ -243,9 +236,9 @@ Hier der Vorschlag:
 \begin{quotation}
 \begin{lstlisting}
 inline int sum&\,&(int $n$) {
-   auto $\it un$ {&\,&static_cast<unsigned>&\,&($n$)$\,$};
+   auto $\mathit{un}$ {&\,&static_cast<unsigned>&\,&($n$)$\,$};
    return static_cast<int>&\,&(
-      $\it(un * (un + 1)) >\!> 1$
+      $(\mathit{un} * (\mathit{un} + 1)) >\!> 1$
    );
 }
 \end{lstlisting}
@@ -342,7 +335,7 @@ Warum kann die Shift-Variante dort nicht verwendet werden?
 Ein ähnliches Problem tritt beim Berechnen eines Mittelwerts
 auf:
 
-\[a+b\over2\]
+\[\frac{a+b}2\]
 
 Wie verhalten sich hier die Grenzen?
 
