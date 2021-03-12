@@ -1,5 +1,18 @@
+\RequirePackage{pdfmanagement-testphase}
+\DeclareDocumentMetadata{pdfstandard=A-2b}
 \documentclass[a5paper,landscape,ngerman,10pt]{article}
-\usepackage{libertine,babel,listings,geometry,relsize}
+\usepackage{babel,listings,geometry,relsize}
+\usepackage[
+    math-style=ISO,
+    bold-style=ISO,
+    partial=upright,
+    nabla=upright
+]{unicode-math}
+
+\setmainfont{Libertinus Serif}
+\setsansfont{Libertinus Sans}
+\setmathfont{Libertinus Math}
+
 \lstloadlanguages{[11]C++, Modula-2, Python}
 \title{Schleifen wegoptimieren}
 \author{Timm Knape}
@@ -230,9 +243,9 @@ Hier der Vorschlag:
 \begin{quotation}
 \begin{lstlisting}
 inline int sum&\,&(int $n$) {
-   auto $un$ {&\,&static_cast<unsigned>&\,&($n$)$\,$};
+   auto $\it un$ {&\,&static_cast<unsigned>&\,&($n$)$\,$};
    return static_cast<int>&\,&(
-      $(un * (un + 1)) >\!> 1$
+      $\it(un * (un + 1)) >\!> 1$
    );
 }
 \end{lstlisting}
