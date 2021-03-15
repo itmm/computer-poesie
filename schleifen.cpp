@@ -1,11 +1,15 @@
 #include <iostream>
-#include <cmath>
+#include <chrono>
 
-int sum(int n) {
-	return n * (n + 1) / 2;
+inline int sum(int n) {
+	int res { 0 };
+	for (int i { 1 }; i <= n; ++i) {
+		res += i;
+	}
+	return res;
 }
 
-int sum2(int n) {
+inline int sum2(int n) {
 	if (n & 1) {
 		return (n + 1)/2 * n;
 	} else {
@@ -13,15 +17,28 @@ int sum2(int n) {
 	}
 }
 
-int sum3(int n) {
+inline int sum3(int n) {
 	auto un { static_cast<unsigned>(n) };
 	return static_cast<int>(
 		un * (un + 1) / 2
 	);
 }
 
+template<int F(int)> void run_test(int runs) {
+	auto start { std::chrono::high_resolution_clock::now() };
+	int sum { 0 };
+	for (int j { runs }; j; --j) {
+	for (int i { 10000 }; i; --i) {
+		sum += F(46341 - i);
+	}
+	}
+	auto stop { std::chrono::high_resolution_clock::now() };
+	auto duration { std::chrono::duration_cast<std::chrono::microseconds>(stop - start) };
+	std::cout << sum << ": " << duration.count() << '\n';
+}
+
 int main() {
-	std::cout << sum(46341) << '\n';
-	std::cout << sum2(46341) << '\n';
-	std::cout << sum3(46341) << '\n';
+	run_test<sum>(1);
+	run_test<sum2>(100);
+	run_test<sum3>(100);
 }

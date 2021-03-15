@@ -227,6 +227,10 @@ int sum&\,&(int $n$) {
 \end{lstlisting}
 \end{quotation}
 
+Ein Test-Szenario hat mit der Schleife knapp eine Sekunde benötigt.
+Dieser Algorithmus arbeitet den gleichen Test-Parcours in 3~Millisekunden
+mehr als 100~Mal ab.
+
 Aber es geht \textit{noch\/} besser.
 Die Fallunterscheidung macht bei aktuellen Prozessor-Pipelines
 Probleme.
@@ -267,9 +271,13 @@ Sieht gewaltig aus (mit dem \lstinline!static_cast!), aber
 der generierte Code ist sehr effizient.
 Es müssen nur andere Maschinenbefehle verwendet werden.
 
+Die Laufzeit fällt von 3~Millisekunden auf $2{,}5$~Millisekunden.
+
 \section{Andere Programmiersprachen}
 
-Viele andere Sprachen haben das gleiche Problem:
+Viele andere Sprachen haben ebenfalls nur endlich viele Werte für ihre
+ganzzahligen Datentypen zur Verfügung.
+Typische Vertreter sind:
 
 \begin{quotation}
  Java,\qquad C\#,\qquad Rust,\qquad Go.
@@ -282,8 +290,7 @@ Zahlen rechnen können:
  Scheme/Lisp,\qquad Python, \qquad Ruby.
 \end{quotation}
 
-Unter Python können wir einfach die Standard-Version
-des Gauß-Algorithmus verwenden:
+Unter Python können wir die Standard-Version des Gauß-Algorithmus verwenden:
 
 \begin{quotation}
 \begin{lstlisting}[language=Python]
@@ -344,7 +351,7 @@ verwendet werden?
 \begin{aufg}
 Wie verhalten sich Systeme, die direkt mit
 \lstinline!unsigned! Zahlen rechnen?
-Warum kann die Shift-Variante dort nicht verwendet werden?
+Warum kann die letzte \cpp~Variante dort nicht verwendet werden?
 \end{aufg}
 
 \begin{aufg}
@@ -357,7 +364,8 @@ Formuliere eine ggf.\ ineffiziente Scheife, die Überläufe verhindert.
 \end{aufg}
 
 \begin{aufg}
-Kann beim Mittelwert auch eine Shift-Variante entwickelt werden, welche
-das zusätzliche Vorzeichen-Bit ausnutzt?
+Kann beim Mittelwert auch eine Lösung entwickelt werden, welche
+das zusätzliche Vorzeichen-Bit ausnutzt? $a$ und $b$ können auch beide
+gerade oder ungerade sein.
 \end{aufg}
 \end{document}

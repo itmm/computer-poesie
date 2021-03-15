@@ -1,4 +1,4 @@
-CXXFLAGS += -Wall -pedantic -std=c++17
+CXXFLAGS += -Wall -pedantic -std=c++17 -g
 
 .PHONY: all clean
 
