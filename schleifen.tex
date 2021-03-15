@@ -1,16 +1,19 @@
 \RequirePackage{pdfmanagement-testphase}
 \DeclareDocumentMetadata{pdfstandard=A-2b}
 \documentclass[a5paper,landscape,ngerman,10pt]{article}
-\usepackage{babel,listings,geometry,relsize,unicode-math}
-%\setmainfont{Libertinus Serif}
-%\setmathfont{Libertinus Math}
-\setmainfont{TeX Gyre Pagella}
-\setmathfont{TeX Gyre Pagella Math}
+\usepackage{babel,listings,geometry,relsize,unicode-math,booktabs}
+\usepackage[hidelinks]{hyperref}
+\setmainfont{Libertinus Serif}
+\setmathfont{Libertinus Math}
+%\setmainfont{TeX Gyre Pagella}
+%\setmathfont{TeX Gyre Pagella Math}
 \lstloadlanguages{[11]C++, Modula-2, Python}
 \title{Schleifen wegoptimieren}
-\author{Timm Knape}
+\author{Timm Knape\quad(\href{mailto:timm@knp.de}{timm@knp.de})}
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
+\newcounter{aufgc}
+\newenvironment{aufg}{\stepcounter{aufgc}\textbf{Aufgabe \theaufgc.}\quad}{}
 \begin{document}
 \newcommand{\cpp}{C\kern-.1em\raise.30ex\hbox{\smaller{++}}}
 \lstset{
@@ -33,7 +36,7 @@ einem Übungszettel zu folgender Aufgabe:
 
 \begin{quotation}
 \textit{Schreibe eine Funktion, welche die 
-Summe der ersten $n$ ganzen Zahlen liefert.}
+Summe der ersten $n$ natürlichen Zahlen berechnet.}
 \end{quotation}
 
 Erwartet war irgendetwas in der Form
@@ -67,13 +70,14 @@ int sum&\,&(int $n$) {
 \end{quotation}
 
 Bleiben wir für den Rest dieses Beitrags in dieser Sprache.
+Meine Modula-2 Kentnisse sind doch arg eingerostet.
 
-\section{Gauß-Methode}
+\section{Gaußsche Summenformel}
 
 Ich war natürlich vorwitzig und sah nicht ein,
 nur zur Übung eine Schleife zu verwenden,
-wenn es nach einem Satz von 
-Carl~Friedrich~Gauß auch viel eleganter geht:
+wenn es nach der Summenformel von Carl~Friedrich~Gauß auch viel eleganter
+geht:
 
 \begin{quotation}
 \begin{lstlisting}
@@ -83,22 +87,26 @@ int sum&\,&(int $n$) {
 \end{lstlisting}
 \end{quotation}
 
-Der junge Gauß hat der Legende nach in der Schule die
-Strafarbeit erhalten, die ersten hundert Zahlen
-zusammenzuaddieren.
-Er war jedoch nach kurzer Zeit fertig.
+In der Schule bekam die Klasse die Aufgabe gestellt, die ersten $100$ Zahlen
+(andere Quellen sprechen von $60$) zusammenzuzählen.
+Der neunjährige Gauß hatte nach wenigen Sekunden die richtige Lösung im Kopf
+berechnet.
 
-Er schrieb die Zahlen einmal vorwärts und einmal rückwärts auf:
+Sein Rechenweg funktioniert am besten für gerade $n$.
+Statt dessen können wir die ersten $n$ Zahlen zweimal aufschreiben.
+Einmal vorwärts und darunter einmal rückwärts:
 
 \begin{quotation}
-\begin{tabular}{c|c|c|c|c|c}
-$1$&$2$&$3$&\ldots&$n-1$&$n$\\
-\hline
-$n$&$n-1$&$n-2$&\ldots&$2$&$1$
+\begin{tabular}{cccccc}
+\toprule
+$1$&$2$&$3$&$\mathstrut\cdots$&$n-1$&$n$\\
+\midrule
+$n$&$n-1$&$n-2$&$\mathstrut\cdots$&$2$&$1$\\
+\bottomrule
 \end{tabular}
 \end{quotation}
 
-Die Summe der Spalten ist stets $n+1$.
+Die Tabelle hat $n$ Spalten und die Summe jeder Spalte ist $n+1$.
 Die Summe aller Zahlen in der Tabelle beträgt also $n\cdot(n+1)$.
 Da die Zahlen aber zweimal aufgeschrieben wurden, muss das
 Ergebnis noch durch zwei geteilt werden.
@@ -111,60 +119,67 @@ Kann es nicht sein, dass durch einen Überlauf falsche Werte
 berechnet werden, die in einer Schleife langsam, aber korrekt,
 berechnet worden wären?
 
-In vielen Sprachen hat eine Integer-Variable nur eine feste
-Länge.
-Auf meinem System sind das $32$ Bit.
-Wenn das Produkt zweier Zahlen größer oder gleich $2^{32}$
-wird, dann wird das Ergebnis abgeschnitten.
-Schon wenn das Ergebnis $2^{31}$ erreicht, entstehen Probleme:
-Das oberste Bit ist für das Vorzeichen reserviert.
-Das Ergebnis wird als negative Zahl angezeigt, wenn das
-höchste Bit gesetzt ist.
+In vielen Sprachen hat eine Integer-Variable nur eine feste Länge.
+Bei meinem System sind das $32$ Bit.
+Eine ganze Zahl kann damit nur $2^{32}$ unterschiedliche Werte annehmen.
+Das sind die Zahlen $-2^{31}$ bis $2^{31}-1$, da der Datentyp \lstinline|int|
+auch negative Zahlen unterstützt
+(genauso wie der Datentyp \lstinline[language=Modula-2]|INTEGER|
+in \textsc{Modula-$2$}).
 
-Natürlich klappt auch nur die Lösung mit der Schleife in einem
-bestimmten Werte-Bereich.
-Dieser ist jedoch viel größer.
-Bei der Schleife muss nur das Ergebnis kleiner $2^{31}$ sein,
-also
+Auch die Schleife liefert nicht für jedes mögliche $n$ die richtige Lösung.
+Irgendwann wird die Summe größer oder gleich $2^{31}$ und es entsteht ein
+Überlauf.
+Das Ergebnis ist gültig, so lange es klein genug ist:
 
-\[2^{31} > \frac{n\cdot(n + 1)}2\]
+\[2^{31} > \frac{n\cdot(n + 1)}2\hbox{.}\]
+
+Hier nutze ich die Gauß-Formel für die Abschätzung der
+Schleifen-Implementierung.
+Denn nun befinden wir uns in der reinen Mathematik, in der es keine
+Überläufe gibt.
 
 Durch Multiplizieren mit $2$ ergibt sich
 
-\[2^{32} > n\cdot(n+1)\]
+\[2^{32} > n\cdot(n+1)\hbox{.}\]
 
 Die Ungleichung bleibt bestehen, wenn das $n+1$ durch $n$
-ersetzt wird
+ersetzt wird. Dadurch wird die rechte Seite nur noch kleiner:
 
-\[2^{32} > n^2\]
+\[2^{32} > n^2\hbox{.}\]
 
 Und durch Ziehen der Quadrat-Wurzel ergibt sich
 
-\[2^{16} > n\]
+\[2^{16} > n\hbox{.}\]
 
-Und diese Grenze ist scharf! Schon mit $n=2^{16}$ ist
-$n\cdot(n+1)$ größer als $32$ Bit.
-Auch mit der Schleife können wir nur bis zur Zahl $65.535$
-aufsummieren, die gerade noch in $16$ Bit hineinpasst.
-Bei größeren Zahlen gibt es einen Überlauf im Ergebnis.
+Diese Grenze ist scharf! Schon mit $n=2^{16}$ läßt sich
+$n\cdot(n+1)$ nicht mehr mit $32$ Bit darstellen.
+Somit können wir auch mit der Schleife nur bis zur Zahl $65.535$
+aufsummieren, die gerade noch mit $16$ Bit dargestellt werden kann.
+Bei größeren Zahlen gibt es einen Überlauf und ein falsches Ergebnis.
 
-Bei der trivialen Umsetzung der Gauß-Methode tritt der
+Bei der oben angegebenen Umsetzung der Gauß-Methode tritt der
 Überlauf schon viel früher ein.
-Schon wenn $n$ mit $n+1$ multipliziert wird, kann ein
-Überlauf entstehen, wenn nicht
+Schon wenn $n$ mit $n+1$ multipliziert wird, ist das Ergebnis nur gültig,
+wenn
 
 \[2^{31}>n\cdot(n+1)\]
 
 gilt.
-Durch die gleiche Abschätzung ergibt sich
+Durch die gleiche Abschätzung wie oben ergibt sich
 
-\[2^{31}>n\]
+\[2^{31}>n^2\]
 
-und weiter durch die Wurzel
+und wieder durch die Anwendung der Quadrat-Wurzel resultiert
 
-\[\sqrt{2}\cdot2^{15}>46.340\geq n\]
+\[\sqrt{2}\cdot2^{15}>46.340\geq n\hbox{.}\]
 
-Schon mit $n=46.341$ passt das Ergebnis nicht mehr in $31$ Bit.
+Schon mit $n=46.341$ passt das Ergebnis nicht mehr in $31$ Bit und liefert
+ein negatives Ergebnis.
+Für alle Zahlen von $46.341$ bis $65.535$ erhalten wir mit dem
+Gauß-Algorithmus keine korrekte Lösung.
+Die Schleife kann für über $40\,\%$ mehr Werte das richtige Ergebnis
+berechnen!
 
 \section{Gauß ohne Überlauf}
 
@@ -175,7 +190,7 @@ Jedoch dürfen wir nur die Zahl durch $2$ teilen, die gerade
 ist.
 Andernfalls entstehen Rundungsfehler.
 
-Eine erste Lösung ist eine Fallunterscheidung:
+Das kann durch eine Fallunterscheidung erreicht werden:
 
 \begin{quotation}
 \begin{lstlisting}
@@ -195,10 +210,9 @@ Und erst damit ist die Aufgabe eigentlich gelöst.
 Der Compiler wird hoffentlich die Modulo-Operation durch eine
 Und-Verknüpfung und die Division durch eine
 Verschiebe-Operation ersetzen, die auf den meisten
-Prozessoren deutlich weniger Takte benötigen (und damit
-schneller sind).
+Prozessoren deutlich schneller sind.
 
-Wenn man dem Compiler nicht traut, kann man auch direkt
+Wenn wir dem Compiler nicht trauen, können wir auch direkt
 auf Bit-Ebene die Anweisungen geben:
 
 \begin{quotation}
@@ -257,21 +271,16 @@ Es müssen nur andere Maschinenbefehle verwendet werden.
 
 Viele andere Sprachen haben das gleiche Problem:
 
-\begin{enumerate}
- \item Java,
- \item C\#,
- \item Rust.
- \item Go.
-\end{enumerate}
+\begin{quotation}
+ Java,\qquad C\#,\qquad Rust,\qquad Go.
+\end{quotation}
 
 Es gibt aber Sprachen, die intern mit beliebig großen
 Zahlen rechnen können:
 
-\begin{enumerate}
- \item Scheme/Lisp und
- \item Python,
- \item Ruby.
-\end{enumerate}
+\begin{quotation}
+ Scheme/Lisp,\qquad Python, \qquad Ruby.
+\end{quotation}
 
 Unter Python können wir einfach die Standard-Version
 des Gauß-Algorithmus verwenden:
@@ -297,7 +306,7 @@ Selbst bei so einer einfachen Schleifen-Optimierung ist
 Vorsicht angesagt.
 Die enorme Kosteneinsparung kann ggf.\ eine Einschränkung
 des Anwendungsbereichs zur Folge haben.
-Wenn man dies nicht beachtet, produziert der verbesserte
+Wenn wir dies nicht beachten, produziert der verbesserte
 Code schwer zu findende Fehler.
 Mit etwas Nachdenken finden sich aber häufig verbesserte
 Lösungen.
@@ -308,7 +317,7 @@ Schon die Beschreibung des Maximums ist nicht leicht.
 Soll der Code möglichst schnell laufen?
 Oder möglichst klein sein?
 Beides schließt sich oft aus.
-Schön ist es, wenn wie in diesem Beispiel eine kleine,
+Schön ist, wenn wie in diesem Beispiel eine kleine,
 schnelle Lösung existiert.
 
 Leider rentiert es sich oft nicht, eine solche Lösung
@@ -316,30 +325,39 @@ zu suchen.
 Die Rechner sind schnell genug, dass auch suboptimale
 Lösungen verwendet werden können.
 Diese verbrauchen jedoch mehr Energie, Speicher und
-Rechenzeit als eine bessere Lösung, über die man ein
+Rechenzeit als eine bessere Lösung, über die wir ein
 klein wenig mehr nachgedacht hat.
 
 \section{Weiter denken}
 
+\begin{aufg}
 JavaScript verwendet nur $64$-Bit Floating-Point Zahlen.
 Wie weit kann die Schleifen-Variante korrekte Ergebnisse
 liefern? Wie weit der einfache Gauß?
+\end{aufg}
 
+\begin{aufg}
 Wie verhalten sich Systeme, auf denen $64$-Bit Integer-Zahlen
-verwendet werden können?
+verwendet werden?
+\end{aufg}
 
+\begin{aufg}
 Wie verhalten sich Systeme, die direkt mit
 \lstinline!unsigned! Zahlen rechnen?
 Warum kann die Shift-Variante dort nicht verwendet werden?
+\end{aufg}
 
+\begin{aufg}
 Ein ähnliches Problem tritt beim Berechnen eines Mittelwerts
 auf:
 
-\[\frac{a+b}2\]
+\[\left\lfloor\frac{a+b}2\right\rfloor\]
 
-Wie verhalten sich hier die Grenzen?
+Formuliere eine ggf.\ ineffiziente Scheife, die Überläufe verhindert.
+\end{aufg}
 
-Kann auch eine Shift-Variante entwickelt werden, welche
+\begin{aufg}
+Kann beim Mittelwert auch eine Shift-Variante entwickelt werden, welche
 das zusätzliche Vorzeichen-Bit ausnutzt?
-
+\end{aufg}
 \end{document}
