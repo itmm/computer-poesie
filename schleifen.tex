@@ -13,7 +13,7 @@
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
 \newcounter{aufgc}
-\newenvironment{aufg}{\stepcounter{aufgc}\textbf{Aufgabe \theaufgc.}\quad}{}
+\newenvironment{aufg}{\stepcounter{aufgc}\textbf{Weiter Denken \theaufgc.}\quad}{}
 \begin{document}
 \newcommand{\cpp}{C\kern-.1em\raise.30ex\hbox{\smaller{++}}}
 \lstset{
@@ -249,10 +249,10 @@ $32$ Bit.
 Nicht in $31$ Bit, aber in $32$!
 Somit klappt alles, wenn wir mit Zahlen rechnen, die
 keinen negativen Wertebereich haben.
-Hier der Vorschlag:
+Damit ergibt sich die folgende Lösung für diesen Artikel:
 
 \begin{quotation}
-\begin{lstlisting}
+\begin{lstlisting}[frame=single,linewidth=6.1cm]
 inline int sum&\,&(int $n$) {
    auto $\mathit{un}$ {&\,&static_cast<unsigned>&\,&($n$)$\,$};
    return static_cast<int>&\,&(
@@ -335,7 +335,7 @@ Diese verbrauchen jedoch mehr Energie, Speicher und
 Rechenzeit als eine bessere Lösung, über die wir ein
 klein wenig mehr nachgedacht hat.
 
-\section{Weiter denken}
+\section{Weiter Denken}
 
 \begin{aufg}
 JavaScript verwendet nur $64$-Bit Floating-Point Zahlen.
