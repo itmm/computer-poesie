@@ -70,7 +70,7 @@ int sum&\,&(int $n$) {
 \end{quotation}
 
 Bleiben wir für den Rest dieses Beitrags in dieser Sprache.
-Meine Modula-2 Kentnisse sind doch arg eingerostet.
+Meine \textsc{Modula-$2$} Kentnisse sind doch arg eingerostet.
 
 \section{Gaußsche Summenformel}
 
@@ -209,8 +209,7 @@ Und erst damit ist die Aufgabe eigentlich gelöst.
 
 Der Compiler wird hoffentlich die Modulo-Operation durch eine
 Und-Verknüpfung und die Division durch eine
-Verschiebe-Operation ersetzen, die auf den meisten
-Prozessoren deutlich schneller sind.
+Verschiebe-Operation ersetzen, die deutlich schneller sind.
 
 Wenn wir dem Compiler nicht trauen, können wir auch direkt
 auf Bit-Ebene die Anweisungen geben:
@@ -264,13 +263,12 @@ inline int sum&\,&(int $n$) {
 
 Der Wechsel nach \lstinline!unsigned! ist notwendig, damit
 bei der Verschiebung immer $0$-Bits nachgezogen werden.
-Bei \lstinline!int! bleibt das oberste Bit unberücksichtigt
-(und dadurch bleibt die Zahl negativ).
+Bei \lstinline!int! bleibt das oberste Bit beim Verschieben unverändert
+(und die Zahl bleibt daher negativ).
 
 Sieht gewaltig aus (mit dem \lstinline!static_cast!), aber
 der generierte Code ist sehr effizient.
 Es müssen nur andere Maschinenbefehle verwendet werden.
-
 Die Laufzeit fällt von 3~Millisekunden auf $2{,}5$~Millisekunden.
 
 \section{Andere Programmiersprachen}
