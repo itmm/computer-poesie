@@ -3,6 +3,7 @@
 \pageheight 14.8cm \vsize 10.8cm
 \input luaotfload.sty
 \font\rm={LibertinusSerif} at 10pt \rm
+\font\sc={LibertinusSerif-Semibold} at 8pt
 \font\it={LibertinusSerif-Italic} at 10pt
 \font\bf={LibertinusSerif-Semibold} at 10pt
 \font\bsf={LibertinusSerif-Bold} at 8pt
@@ -17,11 +18,11 @@
 %\newcommand{\cpp}{C\kern-.1em\raise.30ex\hbox{\smaller{++}}}
 \def\section#1{\bigskip\noindent{\bbf #1}\medskip\noindent}
 \def\cpp{C\kern-.1em\raise.4ex\hbox{$\scriptscriptstyle++$}}
-\def\textsc#1{#1}
+\def\modula{\hbox{M{\sc ODULA}-$2$}}
 \section{Aufgabenstellung}%
 %
 Während meines Informatik-Studiums haben wir die
-Programmiersprache \hbox{\textsc{Modula-$2$}} gelernt.
+Programmiersprache \modula\ gelernt.
 Mühevoll zogen sich die Wochen dahin, in denen wir die
 Grundstrukturen verdauten.
 Irgendwann wurden Schleifen eingeführt und es kam auf
@@ -55,7 +56,7 @@ $$\vbox{\obeylines
 $\}$}$$
 
 \noindent Bleiben wir für den Rest dieses Beitrags in dieser Sprache.
-Meine \textsc{Modula-$2$} Kentnisse sind doch arg eingerostet.
+Meine \modula\ Kentnisse sind doch arg eingerostet.
 
 \section{Gaußsche Summenformel}%
 %
@@ -101,14 +102,13 @@ Kann es nicht sein, dass durch einen Überlauf falsche Werte
 berechnet werden, die in einer Schleife langsam, aber korrekt,
 berechnet worden wären?
 
-\def\lstinline#1{#1}
 In vielen Sprachen hat eine Integer-Variable nur eine feste Länge.
 Bei meinem System sind das $32$ Bit.
 Eine ganze Zahl kann damit nur $2^{32}$ unterschiedliche Werte annehmen.
-Das sind die Zahlen $-2^{31}$ bis $2^{31}-1$, da der Datentyp \lstinline{int}
+Das sind die Zahlen $-2^{31}$ bis $2^{31}-1$, da der Datentyp {\bf int}
 auch negative Zahlen unterstützt
-(genauso wie der Datentyp \lstinline{INTEGER}
-in \textsc{Modula-$2$}).
+(genauso wie der Datentyp {\bsf INTEGER}
+in \modula.
 
 Auch die Schleife liefert nicht für jedes mögliche $n$ die richtige Lösung.
 Irgendwann wird die Summe größer oder gleich $2^{31}$ und es entsteht ein
@@ -236,12 +236,12 @@ $$\vbox{\obeylines
 \quad );
 $\}$}$$
 
-\noindent Der Wechsel nach \lstinline{unsigned}! ist notwendig, damit
+\noindent Der Wechsel nach {\bf unsigned} ist notwendig, damit
 bei der Verschiebung immer $0$-Bits nachgezogen werden.
-Bei \lstinline{int}! bleibt das oberste Bit beim Verschieben unverändert
+Bei {\bf int} bleibt das oberste Bit beim Verschieben unverändert
 (und die Zahl bleibt daher negativ).
 
-Sieht gewaltig aus (mit dem \lstinline{static\_cast}), aber
+Sieht gewaltig aus (mit dem {\bf static\_cast}, aber
 der generierte Code ist sehr effizient.
 Es müssen nur andere Maschinenbefehle verwendet werden.
 Die Laufzeit fällt von 3~Millisekunden auf $2{,}5$~Millisekunden.
@@ -304,25 +304,26 @@ klein wenig mehr nachgedacht hat.
 
 \section{Weiter Denken}%
 %
+\def\aufg{\bigskip\noindent{\bf Weiter Denken .}\qquad}
 %\begin{aufg}
-JavaScript verwendet nur $64$-Bit Floating-Point Zahlen.
+\aufg JavaScript verwendet nur $64$-Bit Floating-Point Zahlen.
 Wie weit kann die Schleifen-Variante korrekte Ergebnisse
 liefern? Wie weit der einfache Gauß?
 %\end{aufg}
 
 %\begin{aufg}
-Wie verhalten sich Systeme, auf denen $64$-Bit Integer-Zahlen
+\aufg Wie verhalten sich Systeme, auf denen $64$-Bit Integer-Zahlen
 verwendet werden?
 %\end{aufg}
 
 %\begin{aufg}
-Wie verhalten sich Systeme, die direkt mit
-\lstinline{unsigned} Zahlen rechnen?
+\aufg Wie verhalten sich Systeme, die direkt mit
+{\bf unsigned} Zahlen rechnen?
 Warum kann die letzte \cpp~Variante dort nicht verwendet werden?
 %\end{aufg}
 
 %\begin{aufg}
-Ein ähnliches Problem tritt beim Berechnen eines Mittelwerts
+\aufg Ein ähnliches Problem tritt beim Berechnen eines Mittelwerts
 auf:
 
 $$\left\lfloor{a+b\over 2}\right\rfloor$$
@@ -331,8 +332,8 @@ $$\left\lfloor{a+b\over 2}\right\rfloor$$
 %\end{aufg}
 
 %\begin{aufg}
-Kann beim Mittelwert auch eine Lösung entwickelt werden, welche
-das zusätzliche Vorzeichen-Bit ausnutzt? $a$ und $b$ können auch beide
+\aufg Kann beim Mittelwert auch eine Lösung entwickelt werden, welche
+das zusätzliche Vor\-zei\-chen-Bit ausnutzt? $a$ und $b$ können auch beide
 gerade oder ungerade sein.
 %\end{aufg}
 %\end{document}
