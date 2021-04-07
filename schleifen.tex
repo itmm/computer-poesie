@@ -1,31 +1,24 @@
-\RequirePackage{pdfmanagement-testphase}
-\DeclareDocumentMetadata{pdfstandard=A-2b}
-\documentclass[a5paper,landscape,ngerman,10pt]{article}
-\usepackage{babel,listings,geometry,relsize,unicode-math,booktabs}
-\usepackage[hidelinks]{hyperref}
-\setmainfont{Libertinus Serif}
-\setmathfont{Libertinus Math}
-%\setmainfont{TeX Gyre Pagella}
-%\setmathfont{TeX Gyre Pagella Math}
-\lstloadlanguages{[11]C++, Modula-2, Python}
-\title{Schleifen wegoptimieren}
-\author{Timm Knape\quad(\href{mailto:timm@knp.de}{timm@knp.de})}
-\setlength{\parindent}{0em}
-\setlength{\parskip}{1em}
-\newcounter{aufgc}
-\newenvironment{aufg}{\stepcounter{aufgc}\textbf{Weiter Denken \theaufgc.}\quad}{}
-\begin{document}
-\newcommand{\cpp}{C\kern-.1em\raise.30ex\hbox{\smaller{++}}}
-\lstset{
-  columns=fullflexible,
-  language=[11]C++,
-  mathescape=true,
-  escapechar=\&
-}
-%
-\maketitle
-%
-\section{Aufgabenstellung}
+\uselanguage{ngerman}
+\pagewidth 21cm \hsize 16cm
+\pageheight 14.8cm \vsize 10.8cm
+\input luaotfload.sty
+\font\rm={LibertinusSerif} at 10pt \rm
+\font\it={LibertinusSerif-Italic} at 10pt
+\font\bf={LibertinusSerif-Semibold} at 10pt
+\font\bsf={LibertinusSerif-Bold} at 8pt
+\font\tf={LibertinusSerif-Semibold} at 16pt
+\font\bbf={LibertinusSerif-Bold} at 11pt
+%\usepackage{babel,listings,geometry,relsize,unicode-math,booktabs}
+%\usepackage[hidelinks]{hyperref}
+%\setmathfont{Libertinus Math}
+\centerline{\tf Schleifen wegoptimieren}
+\medskip
+\centerline{Timm Knape\quad(timm@knp.de)}
+%\newcommand{\cpp}{C\kern-.1em\raise.30ex\hbox{\smaller{++}}}
+\def\section#1{\bigskip\noindent{\bbf #1}\medskip\noindent}
+\def\cpp{C\kern-.1em\raise.4ex\hbox{$\scriptscriptstyle++$}}
+\def\textsc#1{#1}
+\section{Aufgabenstellung}%
 %
 Während meines Informatik-Studiums haben wir die
 Programmiersprache \hbox{\textsc{Modula-$2$}} gelernt.
@@ -34,60 +27,49 @@ Grundstrukturen verdauten.
 Irgendwann wurden Schleifen eingeführt und es kam auf
 einem Übungszettel zu folgender Aufgabe:
 
-\begin{quotation}
-\textit{Schreibe eine Funktion, welche die 
-Summe der ersten $n$ natürlichen Zahlen berechnet.}
-\end{quotation}
+$$\hbox{\it Schreibe eine Funktion, welche die 
+Summe der ersten $n$ natürlichen Zahlen berechnet.}$$
 
-Erwartet war irgendetwas in der Form
+\noindent Erwartet war irgendetwas in der Form
 
-\begin{quotation}
-\begin{lstlisting}[language=Modula-2, morekeywords={TO}]
-PROCEDURE Sum&\,&($n$: INTEGER): INTEGER;
-   VAR $i,s$: INTEGER;
-BEGIN
-   $s := 0$;
-   FOR $i := 1$ TO $n$ DO
-      $s := s + 1$;
-   END;
-   RETURN $s$;
-END Sum;
-\end{lstlisting}
-\end{quotation}
+$$\vbox{\obeylines
+{\bsf PROCEDURE} Sum$\,$($n$: {\bsf INTEGER}): {\bsf INTEGER};
+\quad {\bsf VAR} $i,s$: {\bsf INTEGER};
+{\bsf BEGIN}
+\quad $s := 0$;
+\quad {\bsf FOR} $i := 1$ {\bsf TO} $n$ {\bsf DO}
+\qquad $s := s + 1$;
+\quad {\bsf END};
+\quad {\bsf RETURN} $s$;
+{\bsf END} Sum;}$$
 
-In \cpp\ kann die Funktion etwa so aussehen:
+\noindent In \cpp\ kann die Funktion etwa so aussehen:
 
-\begin{quotation}
-\begin{lstlisting}
-int sum&\,&(int $n$) {
-   int $s$ {$\,0\,$};
-   for (int $i$ {$\,1\,$}; $i$ <= $n$; ++$i$) {
-      $s$ += $i$;
-   }
-   return $i$;
-}
-\end{lstlisting}
-\end{quotation}
+$$\vbox{\obeylines
+{\bf int} sum$\,$({\bf int} $n$) $\{$
+\quad {\bf int} $s$ {$\,0\,$};
+\quad {\bf for} ({\bf int} $i$ $\{\,1\,\}$; $i$ <= $n$; ++$i$) $\{$
+\qquad $s$ += $i$;
+\quad $\}$
+\quad {\bf return} $i$;
+$\}$}$$
 
-Bleiben wir für den Rest dieses Beitrags in dieser Sprache.
+\noindent Bleiben wir für den Rest dieses Beitrags in dieser Sprache.
 Meine \textsc{Modula-$2$} Kentnisse sind doch arg eingerostet.
 
-\section{Gaußsche Summenformel}
-
+\section{Gaußsche Summenformel}%
+%
 Ich war natürlich vorwitzig und sah nicht ein,
 nur zur Übung eine Schleife zu verwenden,
 wenn es nach der Summenformel von Carl~Friedrich~Gauß auch viel eleganter
 geht:
 
-\begin{quotation}
-\begin{lstlisting}
-int sum&\,&(int $n$) {
-   return $n * (n + 1) / 2$;
-}
-\end{lstlisting}
-\end{quotation}
+$$\vbox{\obeylines
+{\bf int} sum$\,$({\bf int} $n$) $\{$
+\quad {\bf return} $n * (n + 1) / 2$;
+$\}$}$$
 
-In der Schule bekam die Klasse die Aufgabe gestellt, die ersten $100$ Zahlen
+\noindent In der Schule bekam die Klasse die Aufgabe gestellt, die ersten $100$ Zahlen
 (andere Quellen sprechen von $60$) zusammenzuzählen.
 Der neunjährige Gauß hatte nach wenigen Sekunden die richtige Lösung im Kopf
 berechnet.
@@ -96,35 +78,36 @@ Sein Rechenweg funktioniert am besten für gerade $n$.
 Statt dessen können wir die ersten $n$ Zahlen zweimal aufschreiben.
 Einmal vorwärts und darunter einmal rückwärts:
 
-\begin{quotation}
-\begin{tabular}{cccccc}
-\toprule
-$1$&$2$&$3$&$\mathstrut\cdots$&$n-1$&$n$\\
-\midrule
-$n$&$n-1$&$n-2$&$\mathstrut\cdots$&$2$&$1$\\
-\bottomrule
-\end{tabular}
-\end{quotation}
+%\begin{quotation}
+%\begin{tabular}{cccccc}
+%\toprule
+%$1$&$2$&$3$&$\mathstrut\cdots$&$n-1$&$n$\\
+%\midrule
+%$n$&$n-1$&$n-2$&$\mathstrut\cdots$&$2$&$1$\\
+%\bottomrule
+%\end{tabular}
+%\end{quotation}
 
-Die Tabelle hat $n$ Spalten und die Summe jeder Spalte ist $n+1$.
+\noindent Die Tabelle hat $n$ Spalten und die Summe jeder Spalte ist $n+1$.
 Die Summe aller Zahlen in der Tabelle beträgt also $n\cdot(n+1)$.
 Da die Zahlen aber zweimal aufgeschrieben wurden, muss das
 Ergebnis noch durch zwei geteilt werden.
 
-\section{Überlauf}
-
+\section{Überlauf}%
+%
 Ich habe auf diese Aufgabe die vollen Punkte bekommen.
 Inzwischen frage ich mich jedoch, ob dies gerechtfertigt war:
 Kann es nicht sein, dass durch einen Überlauf falsche Werte
 berechnet werden, die in einer Schleife langsam, aber korrekt,
 berechnet worden wären?
 
+\def\lstinline#1{#1}
 In vielen Sprachen hat eine Integer-Variable nur eine feste Länge.
 Bei meinem System sind das $32$ Bit.
 Eine ganze Zahl kann damit nur $2^{32}$ unterschiedliche Werte annehmen.
-Das sind die Zahlen $-2^{31}$ bis $2^{31}-1$, da der Datentyp \lstinline|int|
+Das sind die Zahlen $-2^{31}$ bis $2^{31}-1$, da der Datentyp \lstinline{int}
 auch negative Zahlen unterstützt
-(genauso wie der Datentyp \lstinline[language=Modula-2]|INTEGER|
+(genauso wie der Datentyp \lstinline{INTEGER}
 in \textsc{Modula-$2$}).
 
 Auch die Schleife liefert nicht für jedes mögliche $n$ die richtige Lösung.
@@ -132,27 +115,27 @@ Irgendwann wird die Summe größer oder gleich $2^{31}$ und es entsteht ein
 Überlauf.
 Das Ergebnis ist gültig, so lange es klein genug ist:
 
-\[2^{31} > \frac{n\cdot(n + 1)}2\hbox{.}\]
+$$2^{31} > {n\cdot(n + 1)\over 2}\hbox{.}$$
 
-Hier nutze ich die Gauß-Formel für die Abschätzung der
+\noindent Hier nutze ich die Gauß-Formel für die Abschätzung der
 Schleifen-Implementierung.
 Denn nun befinden wir uns in der reinen Mathematik, in der es keine
 Überläufe gibt.
 
 Durch Multiplizieren mit $2$ ergibt sich
 
-\[2^{32} > n\cdot(n+1)\hbox{.}\]
+$$2^{32} > n\cdot(n+1)\hbox{.}$$
 
-Die Ungleichung bleibt bestehen, wenn das $n+1$ durch $n$
+\noindent Die Ungleichung bleibt bestehen, wenn das $n+1$ durch $n$
 ersetzt wird. Dadurch wird die rechte Seite nur noch kleiner:
 
-\[2^{32} > n^2\hbox{.}\]
+$$2^{32} > n^2\hbox{.}$$
 
-Und durch Ziehen der Quadrat-Wurzel ergibt sich
+\noindent Und durch Ziehen der Quadrat-Wurzel ergibt sich
 
-\[2^{16} > n\hbox{.}\]
+$$2^{16} > n\hbox{.}$$
 
-Diese Grenze ist scharf! Schon mit $n=2^{16}$ läßt sich
+\noindent Diese Grenze ist scharf! Schon mit $n=2^{16}$ läßt sich
 $n\cdot(n+1)$ nicht mehr mit $32$ Bit darstellen.
 Somit können wir auch mit der Schleife nur bis zur Zahl $65.535$
 aufsummieren, die gerade noch mit $16$ Bit dargestellt werden kann.
@@ -163,26 +146,26 @@ Bei der oben angegebenen Umsetzung der Gauß-Methode tritt der
 Schon wenn $n$ mit $n+1$ multipliziert wird, ist das Ergebnis nur gültig,
 wenn
 
-\[2^{31}>n\cdot(n+1)\]
+$$2^{31}>n\cdot(n+1)$$
 
-gilt.
+\noindent gilt.
 Durch die gleiche Abschätzung wie oben ergibt sich
 
-\[2^{31}>n^2\]
+$$2^{31}>n^2$$
 
-und wieder durch die Anwendung der Quadrat-Wurzel resultiert
+\noindent und wieder durch die Anwendung der Quadrat-Wurzel resultiert
 
-\[\sqrt{2}\cdot2^{15}>46.340\geq n\hbox{.}\]
+$$\sqrt{2}\cdot2^{15}>46.340\geq n\hbox{.}$$
 
-Schon mit $n=46.341$ passt das Ergebnis nicht mehr in $31$ Bit und liefert
+\noindent Schon mit $n=46.341$ passt das Ergebnis nicht mehr in $31$ Bit und liefert
 ein negatives Ergebnis.
 Für alle Zahlen von $46.341$ bis $65.535$ erhalten wir mit dem
 Gauß-Algorithmus keine korrekte Lösung.
 Die Schleife kann für über $40\,\%$ mehr Werte das richtige Ergebnis
 berechnen!
 
-\section{Gauß ohne Überlauf}
-
+\section{Gauß ohne Überlauf}%
+%
 Der Überlauf kann verhindert werden, wenn wir entweder $n$ oder
 $n+1$ erst durch $2$ teilen und dann mit dem anderen Faktor
 multiplizieren.
@@ -192,19 +175,16 @@ Andernfalls entstehen Rundungsfehler.
 
 Das kann durch eine Fallunterscheidung erreicht werden:
 
-\begin{quotation}
-\begin{lstlisting}
-int sum&\,&(int $n$) {
-   if ($n\mathrel\% 2$) {
-      return $(n + 1)/2\:*\:n$;
-   } else {
-      return $n/2 \:*\: (n + 1)$;
-   }
-}
-\end{lstlisting}
-\end{quotation}
+$$\vbox{\obeylines
+{\bf int} sum$\,$({\bf int} $n$) $\{$
+\quad {\bf if} ($n\mathrel\% 2$) $\{$
+\qquad {\bf return} $(n + 1)/2\;*\;n$;
+\quad $\}$ {\bf else} $\{$
+\qquad {\bf return} $n/2 \;*\; (n + 1)$;
+\quad $\}$
+$\}$}$$
 
-Damit funktioniert Gauß wieder bis zur Grenze $65.535$.
+\noindent Damit funktioniert Gauß wieder bis zur Grenze $65.535$.
 Und erst damit ist die Aufgabe eigentlich gelöst.
 
 Der Compiler wird hoffentlich die Modulo-Operation durch eine
@@ -214,23 +194,20 @@ Verschiebe-Operation ersetzen, die deutlich schneller sind.
 Wenn wir dem Compiler nicht trauen, können wir auch direkt
 auf Bit-Ebene die Anweisungen geben:
 
-\begin{quotation}
-\begin{lstlisting}
-int sum&\,&(int $n$) {
-   if ($n \mathrel\& 1$) {
-      return $((n + 1) >\!> 1) * n$;
-   } else {
-      return $(n >\!> 1) * (n + 1)$;
-   }
-}
-\end{lstlisting}
-\end{quotation}
+$$\vbox{\obeylines
+{\bf int} sum$\,$({\bf int} $n$) $\{$
+\quad {\bf if} ($n \mathrel\& 1$) $\{$
+\qquad {\bf return} $((n + 1) >\!> 1) * n$;
+\quad $\}$ {\bf else} $\{$
+\qquad {\bf return} $(n >\!> 1) * (n + 1)$;
+\quad $\}$
+$\}$}$$
 
-Ein Test-Szenario hat mit der Schleife knapp eine Sekunde benötigt.
+\noindent Ein Test-Szenario hat mit der Schleife knapp eine Sekunde benötigt.
 Dieser Algorithmus arbeitet den gleichen Test-Parcours in 3~Millisekunden
 mehr als 100~Mal ab.
 
-Aber es geht \textit{noch\/} besser.
+Aber es geht {\it noch\/} besser.
 Die Fallunterscheidung macht bei aktuellen Prozessor-Pipelines
 Probleme.
 Wenn der Prozessor den falschen Weg rät, muss die
@@ -250,54 +227,46 @@ Somit klappt alles, wenn wir mit Zahlen rechnen, die
 keinen negativen Wertebereich haben.
 Damit ergibt sich die folgende Lösung für diesen Artikel:
 
-\begin{quotation}
-\begin{lstlisting}[frame=single,linewidth=6.1cm]
-inline int sum&\,&(int $n$) {
-   auto $\mathit{un}$ {&\,&static_cast<unsigned>&\,&($n$)$\,$};
-   return static_cast<int>&\,&(
-      $(\mathit{un} * (\mathit{un} + 1)) >\!> 1$
-   );
-}
-\end{lstlisting}
-\end{quotation}
+%\begin{lstlisting}[frame=single,linewidth=6.1cm]
+$$\vbox{\obeylines
+{\bf inline int} sum$\,$({\bf int} $n$) $\{$
+\quad {\bf auto} $\it un$ $\{\,${\bf static\_cast}<{\bf unsigned}>$\,$($n$)$\,\}$;
+\quad {\bf return static\_cast}<{\bf int}>$\,$(
+\qquad $(\it un * (\it un + 1)) >\!> 1$
+\quad );
+$\}$}$$
 
-Der Wechsel nach \lstinline!unsigned! ist notwendig, damit
+\noindent Der Wechsel nach \lstinline{unsigned}! ist notwendig, damit
 bei der Verschiebung immer $0$-Bits nachgezogen werden.
-Bei \lstinline!int! bleibt das oberste Bit beim Verschieben unverändert
+Bei \lstinline{int}! bleibt das oberste Bit beim Verschieben unverändert
 (und die Zahl bleibt daher negativ).
 
-Sieht gewaltig aus (mit dem \lstinline!static_cast!), aber
+Sieht gewaltig aus (mit dem \lstinline{static\_cast}), aber
 der generierte Code ist sehr effizient.
 Es müssen nur andere Maschinenbefehle verwendet werden.
 Die Laufzeit fällt von 3~Millisekunden auf $2{,}5$~Millisekunden.
 
-\section{Andere Programmiersprachen}
-
+\section{Andere Programmiersprachen}%
+%
 Viele andere Sprachen haben ebenfalls nur endlich viele Werte für ihre
 ganzzahligen Datentypen zur Verfügung.
 Typische Vertreter sind:
 
-\begin{quotation}
- Java,\qquad C\#,\qquad Rust,\qquad Go.
-\end{quotation}
+$$\hbox{Java,\qquad C\#,\qquad Rust,\qquad Go.}$$
 
-Es gibt aber Sprachen, die intern mit beliebig großen
+\noindent Es gibt aber Sprachen, die intern mit beliebig großen
 Zahlen rechnen können:
 
-\begin{quotation}
- Scheme/Lisp,\qquad Python, \qquad Ruby.
-\end{quotation}
+$$\hbox{Scheme/Lisp,\qquad Python, \qquad Ruby.}$$
 
-Unter Python können wir die Standard-Version des Gauß-Algorithmus verwenden:
+\noindent Unter Python können wir die Standard-Version des Gauß-Algorithmus verwenden:
 
-\begin{quotation}
-\begin{lstlisting}[language=Python]
-def sum&\,&($n$):
-   return $n * (n + 1) \mathrel{/\!/} 2$
-\end{lstlisting}
-\end{quotation}
+$$\vbox{\obeylines
+{\bf def} sum$\,$($n$):
+\quad {\bf return} $n * (n + 1) \mathrel{/\!/} 2$
+}$$
 
-Jedoch ist der Umgang mit beliebig großen ganze Zahlen
+\noindent Jedoch ist der Umgang mit beliebig großen ganze Zahlen
 ein erheblicher Mehraufwand für den Rechner.
 Anstatt direkt in eimen Register zu rechnen, müssen die
 Zahlen über mehrere Worte des Arbeitsspeichers verteilt
@@ -305,8 +274,8 @@ oder in mehreren Registern abgelegt werden.
 Dabei entstehen zwangsweise Sprünge, da von vorne herein
 nicht klar ist, wie viel Speicher die Zahl belegt.
 
-\section{Zusammenfassung}
-
+\section{Zusammenfassung}%
+%
 Selbst bei so einer einfachen Schleifen-Optimierung ist
 Vorsicht angesagt.
 Die enorme Kosteneinsparung kann ggf.\ eine Einschränkung
@@ -333,37 +302,38 @@ Diese verbrauchen jedoch mehr Energie, Speicher und
 Rechenzeit als eine bessere Lösung, über die wir ein
 klein wenig mehr nachgedacht hat.
 
-\section{Weiter Denken}
-
-\begin{aufg}
+\section{Weiter Denken}%
+%
+%\begin{aufg}
 JavaScript verwendet nur $64$-Bit Floating-Point Zahlen.
 Wie weit kann die Schleifen-Variante korrekte Ergebnisse
 liefern? Wie weit der einfache Gauß?
-\end{aufg}
+%\end{aufg}
 
-\begin{aufg}
+%\begin{aufg}
 Wie verhalten sich Systeme, auf denen $64$-Bit Integer-Zahlen
 verwendet werden?
-\end{aufg}
+%\end{aufg}
 
-\begin{aufg}
+%\begin{aufg}
 Wie verhalten sich Systeme, die direkt mit
-\lstinline!unsigned! Zahlen rechnen?
+\lstinline{unsigned} Zahlen rechnen?
 Warum kann die letzte \cpp~Variante dort nicht verwendet werden?
-\end{aufg}
+%\end{aufg}
 
-\begin{aufg}
+%\begin{aufg}
 Ein ähnliches Problem tritt beim Berechnen eines Mittelwerts
 auf:
 
-\[\left\lfloor\frac{a+b}2\right\rfloor\]
+$$\left\lfloor{a+b\over 2}\right\rfloor$$
 
-Formuliere eine ggf.\ ineffiziente Scheife, die Überläufe verhindert.
-\end{aufg}
+\noindent Formuliere eine ggf.\ ineffiziente Scheife, die Überläufe verhindert.
+%\end{aufg}
 
-\begin{aufg}
+%\begin{aufg}
 Kann beim Mittelwert auch eine Lösung entwickelt werden, welche
 das zusätzliche Vorzeichen-Bit ausnutzt? $a$ und $b$ können auch beide
 gerade oder ungerade sein.
-\end{aufg}
-\end{document}
+%\end{aufg}
+%\end{document}
+\end
