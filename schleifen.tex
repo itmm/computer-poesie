@@ -17,7 +17,7 @@
 \centerline{Timm Knape\quad(timm@knp.de)}
 %\newcommand{\cpp}{C\kern-.1em\raise.30ex\hbox{\smaller{++}}}
 \def\section#1{\bigskip\noindent{\bbf #1}\medskip\noindent}
-\def\cpp{C\kern-.1em\raise.4ex\hbox{$\scriptscriptstyle++$}}
+\def\cpp{C\kern-.08em\raise.4ex\hbox{$\scriptscriptstyle++$}}
 \def\modula{\hbox{M{\sc ODULA}-$2$}}
 \section{Aufgabenstellung}%
 %
@@ -33,27 +33,28 @@ Summe der ersten $n$ natürlichen Zahlen berechnet.}$$
 
 \noindent Erwartet war irgendetwas in der Form
 
-$$\vbox{\obeylines
-{\bsf PROCEDURE} Sum$\,$($n$: {\bsf INTEGER}): {\bsf INTEGER};
-\quad {\bsf VAR} $i,s$: {\bsf INTEGER};
-{\bsf BEGIN}
-\quad $s := 0$;
-\quad {\bsf FOR} $i := 1$ {\bsf TO} $n$ {\bsf DO}
-\qquad $s := s + 1$;
-\quad {\bsf END};
-\quad {\bsf RETURN} $s$;
-{\bsf END} Sum;}$$
+\jot=0pt
+$$\eqalign{
+&\hbox{{\bsf PROCEDURE} Sum}\,(n: \hbox{\bsf INTEGER}): \hbox{\bsf INTEGER};\cr
+&\quad\hbox{\bsf VAR }i,s: \hbox{\bsf INTEGER};\cr
+&\hbox{\bsf BEGIN}\cr
+&\quad s := 0;\cr
+&\quad\hbox{\bsf FOR } i := 1 \hbox{ \bsf TO } n \hbox{ \bsf DO}\cr
+&\qquad s := s + 1;\cr
+&\quad\hbox{\bsf END};\cr
+&\quad\hbox{\bsf RETURN } s;\cr
+&\hbox{{\bsf END} Sum};\cr}$$
 
 \noindent In \cpp\ kann die Funktion etwa so aussehen:
 
-$$\vbox{\obeylines
-{\bf int} sum$\,$({\bf int} $n$) $\{$
-\quad {\bf int} $s$ {$\,0\,$};
-\quad {\bf for} ({\bf int} $i$ $\{\,1\,\}$; $i$ <= $n$; ++$i$) $\{$
-\qquad $s$ += $i$;
-\quad $\}$
-\quad {\bf return} $i$;
-$\}$}$$
+$$\eqalign{
+&\hbox{{\bf int} sum}\,(\hbox{\bf int } n)\;\{\cr
+&\qquad\hbox{\bf int } s\;\{0\};\cr
+&\qquad\hbox{\bf for } (\hbox{\bf int } i\;\{1\};\;i <= n;\;+\!\!+\!i)\;\{\cr
+&\qquad\qquad s \mathrel{+\!\!=} i;\cr
+&\qquad \}\cr
+&\qquad\hbox{\bf return } i;\cr
+&\}\cr}$$
 
 \noindent Bleiben wir für den Rest dieses Beitrags in dieser Sprache.
 Meine \modula\ Kentnisse sind doch arg eingerostet.
@@ -65,10 +66,10 @@ nur zur Übung eine Schleife zu verwenden,
 wenn es nach der Summenformel von Carl~Friedrich~Gauß auch viel eleganter
 geht:
 
-$$\vbox{\obeylines
-{\bf int} sum$\,$({\bf int} $n$) $\{$
-\quad {\bf return} $n * (n + 1) / 2$;
-$\}$}$$
+$$\eqalign{
+&\hbox{{\bf int} sum}\,(\hbox{\bf int } n)\;\{\cr
+&\qquad\hbox{\bf return } n * (n + 1) / 2;\cr
+&\}\cr}$$
 
 \noindent In der Schule bekam die Klasse die Aufgabe gestellt, die ersten $100$ Zahlen
 (andere Quellen sprechen von $60$) zusammenzuzählen.
@@ -177,11 +178,11 @@ Das kann durch eine Fallunterscheidung erreicht werden:
 
 $$\vbox{\obeylines
 {\bf int} sum$\,$({\bf int} $n$) $\{$
-\quad {\bf if} ($n\mathrel\% 2$) $\{$
-\qquad {\bf return} $(n + 1)/2\;*\;n$;
-\quad $\}$ {\bf else} $\{$
-\qquad {\bf return} $n/2 \;*\; (n + 1)$;
-\quad $\}$
+\qquad {\bf if} ($n\mathrel\% 2$) $\{$
+\qquad\qquad {\bf return} $(n + 1)/2\;*\;n$;
+\qquad $\}$ {\bf else} $\{$
+\qquad\qquad {\bf return} $n/2 \;*\; (n + 1)$;
+\qquad $\}$
 $\}$}$$
 
 \noindent Damit funktioniert Gauß wieder bis zur Grenze $65.535$.
@@ -196,11 +197,11 @@ auf Bit-Ebene die Anweisungen geben:
 
 $$\vbox{\obeylines
 {\bf int} sum$\,$({\bf int} $n$) $\{$
-\quad {\bf if} ($n \mathrel\& 1$) $\{$
-\qquad {\bf return} $((n + 1) >\!> 1) * n$;
-\quad $\}$ {\bf else} $\{$
-\qquad {\bf return} $(n >\!> 1) * (n + 1)$;
-\quad $\}$
+\qquad {\bf if} ($n \mathrel\& 1$) $\{$
+\qquad\qquad {\bf return} $((n + 1) >\!> 1) * n$;
+\qquad $\}$ {\bf else} $\{$
+\qquad\qquad {\bf return} $(n >\!> 1) * (n + 1)$;
+\qquad $\}$
 $\}$}$$
 
 \noindent Ein Test-Szenario hat mit der Schleife knapp eine Sekunde benötigt.
@@ -230,10 +231,10 @@ Damit ergibt sich die folgende Lösung für diesen Artikel:
 %\begin{lstlisting}[frame=single,linewidth=6.1cm]
 $$\vbox{\obeylines
 {\bf inline int} sum$\,$({\bf int} $n$) $\{$
-\quad {\bf auto} $\it un$ $\{\,${\bf static\_cast}<{\bf unsigned}>$\,$($n$)$\,\}$;
-\quad {\bf return static\_cast}<{\bf int}>$\,$(
-\qquad $(\it un * (\it un + 1)) >\!> 1$
-\quad );
+\qquad {\bf auto} $\it un$ $\{\,${\bf static\_cast}<{\bf unsigned}>$\,$($n$)$\,\}$;
+\qquad {\bf return static\_cast}<{\bf int}>$\,$(
+\qquad\qquad $(\it un * (\it un + 1)) >\!> 1$
+\qquad );
 $\}$}$$
 
 \noindent Der Wechsel nach {\bf unsigned} ist notwendig, damit
@@ -263,7 +264,7 @@ $$\hbox{Scheme/Lisp,\qquad Python, \qquad Ruby.}$$
 
 $$\vbox{\obeylines
 {\bf def} sum$\,$($n$):
-\quad {\bf return} $n * (n + 1) \mathrel{/\!/} 2$
+\qquad {\bf return} $n * (n + 1) \mathrel{/\!/} 2$
 }$$
 
 \noindent Jedoch ist der Umgang mit beliebig großen ganze Zahlen
