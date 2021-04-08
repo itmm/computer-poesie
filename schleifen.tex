@@ -9,15 +9,13 @@
 \font\bsf={LibertinusSerif-Bold} at 8pt
 \font\tf={LibertinusSerif-Semibold} at 16pt
 \font\bbf={LibertinusSerif-Bold} at 11pt
-%\usepackage{babel,listings,geometry,relsize,unicode-math,booktabs}
 %\usepackage[hidelinks]{hyperref}
 %\setmathfont{Libertinus Math}
 \centerline{\tf Schleifen wegoptimieren}
 \medskip
 \centerline{Timm Knape\quad(timm@knp.de)}
-%\newcommand{\cpp}{C\kern-.1em\raise.30ex\hbox{\smaller{++}}}
 \def\section#1{\bigskip\noindent{\bbf #1}\medskip\noindent}
-\def\cpp{C\kern-.08em\raise.4ex\hbox{$\scriptscriptstyle++$}}
+\def\cpp{C\kern-.08em\raise.3ex\hbox{\sc++}}
 \def\modula{\hbox{M{\sc ODULA}-$2$}}
 \section{Aufgabenstellung}%
 %
@@ -33,28 +31,27 @@ Summe der ersten $n$ natürlichen Zahlen berechnet.}$$
 
 \noindent Erwartet war irgendetwas in der Form
 
-\jot=0pt
-$$\eqalign{
-&\hbox{{\bsf PROCEDURE} Sum}\,(n: \hbox{\bsf INTEGER}): \hbox{\bsf INTEGER};\cr
-&\quad\hbox{\bsf VAR }i,s: \hbox{\bsf INTEGER};\cr
-&\hbox{\bsf BEGIN}\cr
-&\quad s := 0;\cr
-&\quad\hbox{\bsf FOR } i := 1 \hbox{ \bsf TO } n \hbox{ \bsf DO}\cr
-&\qquad s := s + 1;\cr
-&\quad\hbox{\bsf END};\cr
-&\quad\hbox{\bsf RETURN } s;\cr
-&\hbox{{\bsf END} Sum};\cr}$$
+$$\vbox{\halign{#\hfil\cr
+{\bsf PROCEDURE} Sum$\,(n:$ {\bsf INTEGER}): {\bsf INTEGER};\cr
+\quad{\bsf VAR} $i,s:$ {\bsf INTEGER};\cr
+{\bsf BEGIN}\cr
+\quad $s := 0;$\cr
+\quad{\bsf FOR} $i := 1$ {\bsf TO} $n$ {\bsf DO}\cr
+\qquad $s := s + 1;$\cr
+\quad{\bsf END};\cr
+\quad{\bsf RETURN} $s;$\cr
+{\bsf END} Sum;\cr}}$$
 
 \noindent In \cpp\ kann die Funktion etwa so aussehen:
 
-$$\eqalign{
-&\hbox{{\bf int} sum}\,(\hbox{\bf int } n)\;\{\cr
-&\qquad\hbox{\bf int } s\;\{0\};\cr
-&\qquad\hbox{\bf for } (\hbox{\bf int } i\;\{1\};\;i <= n;\;+\!\!+\!i)\;\{\cr
-&\qquad\qquad s \mathrel{+\!\!=} i;\cr
-&\qquad \}\cr
-&\qquad\hbox{\bf return } i;\cr
-&\}\cr}$$
+$$\vbox{\halign{#\hfil\cr
+{\bf int} sum$\,(${\bf int} $n)\;\{$\cr
+\qquad{\bf int} $s\;\{0\};$\cr
+\qquad{\bf for} ({\bf int} $i\;\{1\}$; $i <= n$; $+\!\!+\!i)\;\{$\cr
+\qquad\qquad $s \mathrel{+\!\!=} i$;\cr
+\qquad$\}$\cr
+\qquad{\bf return} $i$;\cr
+$\}$\cr}}$$
 
 \noindent Bleiben wir für den Rest dieses Beitrags in dieser Sprache.
 Meine \modula\ Kentnisse sind doch arg eingerostet.
@@ -66,10 +63,10 @@ nur zur Übung eine Schleife zu verwenden,
 wenn es nach der Summenformel von Carl~Friedrich~Gauß auch viel eleganter
 geht:
 
-$$\eqalign{
-&\hbox{{\bf int} sum}\,(\hbox{\bf int } n)\;\{\cr
-&\qquad\hbox{\bf return } n * (n + 1) / 2;\cr
-&\}\cr}$$
+$$\vbox{\halign{#\hfil\cr
+{\bf int} sum$\,(${\bf int} $n)\;\{$\cr
+\qquad{\bf return} $n * (n + 1) / 2$;\cr
+$\}$\cr}}$$
 
 \noindent In der Schule bekam die Klasse die Aufgabe gestellt, die ersten $100$ Zahlen
 (andere Quellen sprechen von $60$) zusammenzuzählen.
@@ -80,15 +77,12 @@ Sein Rechenweg funktioniert am besten für gerade $n$.
 Statt dessen können wir die ersten $n$ Zahlen zweimal aufschreiben.
 Einmal vorwärts und darunter einmal rückwärts:
 
-%\begin{quotation}
-%\begin{tabular}{cccccc}
-%\toprule
-%$1$&$2$&$3$&$\mathstrut\cdots$&$n-1$&$n$\\
-%\midrule
-%$n$&$n-1$&$n-2$&$\mathstrut\cdots$&$2$&$1$\\
-%\bottomrule
-%\end{tabular}
-%\end{quotation}
+$$\vbox{\halign{\hfil$\,$#$\,$\hfil&&\quad\hfil$\,$#$\,$\hfil\cr
+\noalign{\hrule height1pt\smallskip}
+$1$&$2$&$3$&$\mathstrut\cdots$&$n-1$&$n$\cr
+\noalign{\smallskip\hrule\smallskip}
+$n$&$n-1$&$n-2$&$\mathstrut\cdots$&$2$&$1$\cr
+\noalign{\smallskip\hrule}}}$$
 
 \noindent Die Tabelle hat $n$ Spalten und die Summe jeder Spalte ist $n+1$.
 Die Summe aller Zahlen in der Tabelle beträgt also $n\cdot(n+1)$.
@@ -176,14 +170,14 @@ Andernfalls entstehen Rundungsfehler.
 
 Das kann durch eine Fallunterscheidung erreicht werden:
 
-$$\vbox{\obeylines
-{\bf int} sum$\,$({\bf int} $n$) $\{$
-\qquad {\bf if} ($n\mathrel\% 2$) $\{$
-\qquad\qquad {\bf return} $(n + 1)/2\;*\;n$;
-\qquad $\}$ {\bf else} $\{$
-\qquad\qquad {\bf return} $n/2 \;*\; (n + 1)$;
-\qquad $\}$
-$\}$}$$
+$$\vbox{\halign{#\hfil\cr
+{\bf int} sum$\,$({\bf int} $n$) $\{$\cr
+\qquad{\bf if} ($n\mathrel\% 2$) $\{$\cr
+\qquad\qquad{\bf return} $(n + 1)/2\;*\;n$;\cr
+\qquad$\}$ {\bf else} $\{$\cr
+\qquad\qquad{\bf return} $n/2 \;*\; (n + 1)$;\cr
+\qquad$\}$\cr
+$\}$\cr}}$$
 
 \noindent Damit funktioniert Gauß wieder bis zur Grenze $65.535$.
 Und erst damit ist die Aufgabe eigentlich gelöst.
@@ -195,14 +189,14 @@ Verschiebe-Operation ersetzen, die deutlich schneller sind.
 Wenn wir dem Compiler nicht trauen, können wir auch direkt
 auf Bit-Ebene die Anweisungen geben:
 
-$$\vbox{\obeylines
-{\bf int} sum$\,$({\bf int} $n$) $\{$
-\qquad {\bf if} ($n \mathrel\& 1$) $\{$
-\qquad\qquad {\bf return} $((n + 1) >\!> 1) * n$;
-\qquad $\}$ {\bf else} $\{$
-\qquad\qquad {\bf return} $(n >\!> 1) * (n + 1)$;
-\qquad $\}$
-$\}$}$$
+$$\vbox{\halign{#\hfil\cr
+{\bf int} sum$\,$({\bf int} $n$) $\{$\cr
+\qquad{\bf if} ($n \mathrel\& 1$) $\{$\cr
+\qquad\qquad{\bf return} $((n + 1) >\!> 1) * n$;\cr
+\qquad$\}$ {\bf else} $\{$\cr
+\qquad\qquad{\bf return} $(n >\!> 1) * (n + 1)$;\cr
+\qquad$\}$\cr
+$\}$\cr}}$$
 
 \noindent Ein Test-Szenario hat mit der Schleife knapp eine Sekunde benötigt.
 Dieser Algorithmus arbeitet den gleichen Test-Parcours in 3~Millisekunden
@@ -229,13 +223,13 @@ keinen negativen Wertebereich haben.
 Damit ergibt sich die folgende Lösung für diesen Artikel:
 
 %\begin{lstlisting}[frame=single,linewidth=6.1cm]
-$$\vbox{\obeylines
-{\bf inline int} sum$\,$({\bf int} $n$) $\{$
-\qquad {\bf auto} $\it un$ $\{\,${\bf static\_cast}<{\bf unsigned}>$\,$($n$)$\,\}$;
-\qquad {\bf return static\_cast}<{\bf int}>$\,$(
-\qquad\qquad $(\it un * (\it un + 1)) >\!> 1$
-\qquad );
-$\}$}$$
+$$\vbox{\halign{#\hfil\cr
+{\bf inline int} sum$\,$({\bf int} $n$) $\{$\cr
+\qquad{\bf auto} $\it un$ $\{\,${\bf static\_cast}<{\bf unsigned}>$\,$($n$)$\,\}$;\cr
+\qquad{\bf return static\_cast}<{\bf int}>$\,$(\cr
+\qquad\qquad$(\it un * (\it un + 1)) >\!> 1$\cr
+\qquad);\cr
+$\}$\cr}}$$
 
 \noindent Der Wechsel nach {\bf unsigned} ist notwendig, damit
 bei der Verschiebung immer $0$-Bits nachgezogen werden.
@@ -262,10 +256,9 @@ $$\hbox{Scheme/Lisp,\qquad Python, \qquad Ruby.}$$
 
 \noindent Unter Python können wir die Standard-Version des Gauß-Algorithmus verwenden:
 
-$$\vbox{\obeylines
-{\bf def} sum$\,$($n$):
-\qquad {\bf return} $n * (n + 1) \mathrel{/\!/} 2$
-}$$
+$$\vbox{\halign{#\hfil\cr
+{\bf def} sum$\,$($n$):\cr
+\qquad {\bf return} $n * (n + 1) \mathrel{/\!/} 2$\cr}}$$
 
 \noindent Jedoch ist der Umgang mit beliebig großen ganze Zahlen
 ein erheblicher Mehraufwand für den Rechner.
@@ -305,37 +298,27 @@ klein wenig mehr nachgedacht hat.
 
 \section{Weiter Denken}%
 %
-\def\aufg{\bigskip\noindent{\bf Weiter Denken .}\qquad}
-%\begin{aufg}
+\newcount\aufgc
+\def\aufg{\advance\aufgc by 1\bigskip\noindent{\bf Weiter Denken \number\aufgc.}\quad}
 \aufg JavaScript verwendet nur $64$-Bit Floating-Point Zahlen.
-Wie weit kann die Schleifen-Variante korrekte Ergebnisse
+Wie weit kann die Schleifen-Va\-ri\-an\-te korrekte Ergebnisse
 liefern? Wie weit der einfache Gauß?
-%\end{aufg}
 
-%\begin{aufg}
 \aufg Wie verhalten sich Systeme, auf denen $64$-Bit Integer-Zahlen
 verwendet werden?
-%\end{aufg}
 
-%\begin{aufg}
 \aufg Wie verhalten sich Systeme, die direkt mit
 {\bf unsigned} Zahlen rechnen?
 Warum kann die letzte \cpp~Variante dort nicht verwendet werden?
-%\end{aufg}
 
-%\begin{aufg}
 \aufg Ein ähnliches Problem tritt beim Berechnen eines Mittelwerts
 auf:
 
 $$\left\lfloor{a+b\over 2}\right\rfloor$$
 
 \noindent Formuliere eine ggf.\ ineffiziente Scheife, die Überläufe verhindert.
-%\end{aufg}
 
-%\begin{aufg}
 \aufg Kann beim Mittelwert auch eine Lösung entwickelt werden, welche
 das zusätzliche Vor\-zei\-chen-Bit ausnutzt? $a$ und $b$ können auch beide
 gerade oder ungerade sein.
-%\end{aufg}
-%\end{document}
 \end
