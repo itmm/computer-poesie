@@ -6,11 +6,11 @@ MODULE schleifen;
 	BEGIN
 	   s := 0;
 	   FOR i := 1 TO n DO
-		  s := s + 1;
+		  s := s + 1
 	   END;
-	   RETURN s;
+	   RETURN s
 	END Sum;
 BEGIN
 	WriteInt(Sum(10), 5);
-	WriteLn();
+	WriteLn()
 END schleifen.

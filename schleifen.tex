@@ -2,21 +2,44 @@
 \pagewidth 21cm \hsize 16cm
 \pageheight 14.8cm \vsize 10.8cm
 \input luaotfload.sty
-\font\rm={LibertinusSerif} at 10pt \rm
-\font\sc={LibertinusSerif-Semibold} at 8pt
-\font\it={LibertinusSerif-Italic} at 10pt
-\font\bf={LibertinusSerif-Semibold} at 10pt
-\font\bsf={LibertinusSerif-Bold} at 8pt
-\font\tf={LibertinusSerif-Semibold} at 16pt
-\font\bbf={LibertinusSerif-Bold} at 11pt
+\font\rm={LibertinusSerif-Regular.otf} at 10pt \rm
+\font\sc={LibertinusSerif-Regular.otf:+smcp} at 10pt
+\font\it={LibertinusSerif-Italic.otf} at 10pt
+\font\bf={LibertinusSerif-Semibold.otf} at 10pt
+\font\bsf={LibertinusSerif-Semibold.otf:+smcp} at 10pt
+\font\tf={LibertinusSerif-Semibold.otf} at 16pt
+\font\bbf={LibertinusSerif-Bold.otf} at 11pt
+\font\mf={LibertinusMath-Regular.otf} at 10pt
+\font\monof={LibertinusMono-Regular.otf} at 10pt
+\if10
+\textfont0=\rm
+\textfont1=\it
+\textfont2=\rm
+\textfont3=\rm
+\textfont4=\mf
+\textfont5=\monof
+\font\rms={LibertinusSerif-Semibold.otf} at 7pt
+\scriptfont0=\rms
+\mathchardef\{="407B
+\mathchardef\}="507D
+\mathcode`,="602C
+\mathcode`/="042F
+\mathcode`+="242B
+\mathcode`*="252A
+%\mathcode`/="002044
+\mathcode`-="242D
+%\mathcode`-="242012
 %\usepackage[hidelinks]{hyperref}
 %\setmathfont{Libertinus Math}
+%\mathchardef\cdot="0022C5
+\mathchardef\cdot="24B7
+\fi
 \centerline{\tf Schleifen wegoptimieren}
 \medskip
 \centerline{Timm Knape\quad(timm@knp.de)}
 \def\section#1{\bigskip\noindent{\bbf #1}\medskip\noindent}
-\def\cpp{C\kern-.08em\raise.3ex\hbox{\sc++}}
-\def\modula{\hbox{M{\sc ODULA}-$2$}}
+\def\cpp{C\kern-.08em\raise.3ex\hbox{++}}
+\def\modula{\hbox{\sc Modula-$2$}}
 \section{Aufgabenstellung}%
 %
 Während meines Informatik-Studiums haben wir die
@@ -32,22 +55,22 @@ Summe der ersten $n$ natürlichen Zahlen berechnet.}$$
 \noindent Erwartet war irgendetwas in der Form
 
 $$\vbox{\halign{#\hfil\cr
-{\bsf PROCEDURE} Sum$\,(n:$ {\bsf INTEGER}): {\bsf INTEGER};\cr
-\quad{\bsf VAR} $i,s:$ {\bsf INTEGER};\cr
-{\bsf BEGIN}\cr
+{\bsf procedure} Sum$\,(n:$ {\bsf integer}): {\bsf integer};\cr
+\quad{\bsf var} $i,s:$ {\bsf integer};\cr
+{\bsf begin}\cr
 \quad $s := 0;$\cr
-\quad{\bsf FOR} $i := 1$ {\bsf TO} $n$ {\bsf DO}\cr
-\qquad $s := s + 1;$\cr
-\quad{\bsf END};\cr
-\quad{\bsf RETURN} $s;$\cr
-{\bsf END} Sum;\cr}}$$
+\quad{\bsf for} $i := 1$ {\bsf to} $n$ {\bsf do}\cr
+\qquad $s := s + 1$\cr
+\quad{\bsf end};\cr
+\quad{\bsf return} $s$\cr
+{\bsf end} Sum;\cr}}$$
 
 \noindent In \cpp\ kann die Funktion etwa so aussehen:
 
 $$\vbox{\halign{#\hfil\cr
-{\bf int} sum$\,(${\bf int} $n)\;\{$\cr
+{\bf int} sum$\,(\,${\bf int} $n\,)\;\{$\cr
 \qquad{\bf int} $s\;\{0\};$\cr
-\qquad{\bf for} ({\bf int} $i\;\{1\}$; $i <= n$; $+\!\!+\!i)\;\{$\cr
+\qquad{\bf for} ($\,${\bf int} $i\;\{1\}$; $i <= n$; $+\!\!+\!\!i\,)\;\{$\cr
 \qquad\qquad $s \mathrel{+\!\!=} i$;\cr
 \qquad$\}$\cr
 \qquad{\bf return} $i$;\cr
@@ -64,7 +87,7 @@ wenn es nach der Summenformel von Carl~Friedrich~Gauß auch viel eleganter
 geht:
 
 $$\vbox{\halign{#\hfil\cr
-{\bf int} sum$\,(${\bf int} $n)\;\{$\cr
+{\bf int} sum$\,(\,${\bf int} $n\,)\;\{$\cr
 \qquad{\bf return} $n * (n + 1) / 2$;\cr
 $\}$\cr}}$$
 
@@ -102,7 +125,7 @@ Bei meinem System sind das $32$ Bit.
 Eine ganze Zahl kann damit nur $2^{32}$ unterschiedliche Werte annehmen.
 Das sind die Zahlen $-2^{31}$ bis $2^{31}-1$, da der Datentyp {\bf int}
 auch negative Zahlen unterstützt
-(genauso wie der Datentyp {\bsf INTEGER}
+(genauso wie der Datentyp {\bsf integer}
 in \modula.
 
 Auch die Schleife liefert nicht für jedes mögliche $n$ die richtige Lösung.
@@ -192,9 +215,9 @@ auf Bit-Ebene die Anweisungen geben:
 $$\vbox{\halign{#\hfil\cr
 {\bf int} sum$\,$({\bf int} $n$) $\{$\cr
 \qquad{\bf if} ($n \mathrel\& 1$) $\{$\cr
-\qquad\qquad{\bf return} $((n + 1) >\!> 1) * n$;\cr
+\qquad\qquad{\bf return} $((n + 1) >> 1) * n$;\cr
 \qquad$\}$ {\bf else} $\{$\cr
-\qquad\qquad{\bf return} $(n >\!> 1) * (n + 1)$;\cr
+\qquad\qquad{\bf return} $(n >> 1) * (n + 1)$;\cr
 \qquad$\}$\cr
 $\}$\cr}}$$
 
@@ -227,7 +250,7 @@ $$\vbox{\halign{#\hfil\cr
 {\bf inline int} sum$\,$({\bf int} $n$) $\{$\cr
 \qquad{\bf auto} $\it un$ $\{\,${\bf static\_cast}<{\bf unsigned}>$\,$($n$)$\,\}$;\cr
 \qquad{\bf return static\_cast}<{\bf int}>$\,$(\cr
-\qquad\qquad$(\it un * (\it un + 1)) >\!> 1$\cr
+\qquad\qquad$(\it un * (\it un + 1)) >> 1$\cr
 \qquad);\cr
 $\}$\cr}}$$
 
