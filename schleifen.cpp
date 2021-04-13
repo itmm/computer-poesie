@@ -24,6 +24,10 @@ inline int sum3(int n) {
 	);
 }
 
+inline int failed_sum(int n) {
+	return n * (n + 1) / 2;
+}
+
 template<int F(int)> void run_test(int runs) {
 	auto start { std::chrono::high_resolution_clock::now() };
 	int sum { 0 };
@@ -41,4 +45,9 @@ int main() {
 	run_test<sum>(1);
 	run_test<sum2>(100);
 	run_test<sum3>(100);
+	for (int i {46341}; i <= 65535; ++i) {
+		if (sum3(i) == failed_sum(i)) {
+			std::cout << i << ": " << sum3(i) << "\n";
+		}
+	}
 }
